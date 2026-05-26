@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="slides-format" content="viewport" />
+  <title>BOTJURIDICO | Asistente Legal Inteligente</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0c0f14;
+      --bg-soft: #121723;
+      --panel: rgba(255,255,255,0.07);
+      --panel-strong: rgba(255,255,255,0.11);
+      --border: rgba(255,255,255,0.12);
+      --text: #eef2ff;
+      --muted: #a5b0c8;
+      --faint: #73809d;
+      --accent: #6ee7d8;
+      --accent-2: #8b5cf6;
+      --accent-3: #ff7a59;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+      --radius: 26px;
+      --slide-w: min(980px, 82vw);
+      --slide-h: min(680px, 82vh);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(110,231,216,0.16), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(139,92,246,0.18), transparent 30%),
+        radial-gradient(circle at 60% 78%, rgba(255,122,89,0.12), transparent 28%),
+        linear-gradient(135deg, #090b10 0%, #0c0f14 45%, #121826 100%);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
+      pointer-events: none;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity .55s ease, transform .55s ease;
+      pointer-events: none;
+      padding: 32px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .frame {
+      position: relative;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      border-radius: 36px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(110,231,216,0.12), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(139,92,246,0.12), transparent 35%);
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      padding: 34px 38px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px rgba(110,231,216,.65);
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(34px, 4.4vw, 64px);
+      line-height: .98;
+      letter-spacing: -0.04em;
+    }
+
+    .title-md {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(24px, 2.7vw, 40px);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin-top: 16px;
+      max-width: 58ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 24px;
+      height: 100%;
+    }
+
+    .grid-hero {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel.strong {
+      background: var(--panel-strong);
+    }
+
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .chip {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .avatar-wrap {
+      position: relative;
+      height: 100%;
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(110,231,216,.25), transparent 22%),
+        radial-gradient(circle at 70% 20%, rgba(139,92,246,.23), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border: 1px solid var(--border);
+    }
+
+    .avatar-ring {
+      width: 270px;
+      height: 270px;
+      border-radius: 50%;
+      padding: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+      animation: floaty 4s ease-in-out infinite;
+    }
+
+    .avatar-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      border: 6px solid rgba(12,15,20,.9);
+    }
+
+    @keyframes floaty {
+      0%,100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .stat .n {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .stat .t {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--faint);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .skill {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+    }
+
+    .skill h4 {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .bars {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .barline {
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+      flex: 1;
+    }
+
+    .project {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 24px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+    }
+
+    .project img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .project-body h4 {
+      font-size: 17px;
+    }
+
+    .project-body p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(110,231,216,.12);
+      border: 1px solid rgba(110,231,216,.24);
+    }
+
+    .persona-layout {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 18px;
+      height: 100%;
+    }
+
+    .persona-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .persona-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .mini {
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+    }
+
+    .mini span {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .11em;
+      color: var(--faint);
+      margin-bottom: 7px;
+    }
+
+    .mini strong {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .persona-right {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+    }
+
+    .quote {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .list-box {
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+    }
+
+    .list-box h4 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .list-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      flex: 1;
+      margin-top: 16px;
+    }
+
+    .gallery-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .gallery-card {
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      position: relative;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 180px;
+      object-fit: cover;
+      display: block;
+      opacity: .88;
+    }
+
+    .gallery-card .overlay {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(12,15,20,.65);
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+      flex: 1;
+    }
+
+    .time-card {
+      border-radius: 24px;
+      padding: 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .time-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+
+    .time-card .year {
+      color: var(--accent);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 10px;
+    }
+
+    .time-card h4 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .time-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .closing {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .closing .title {
+      max-width: 11ch;
+      margin: 0 auto 16px;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    .contact-pill {
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .nav {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(13,16,22,.75);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav button {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 0;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #081017;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      transition: all .3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      width: 26px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .counter {
+      font-size: 12px;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      min-width: 46px;
+      text-align: center;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .55s ease;
+    }
+
+    .slide.active .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.active .reveal:nth-child(2) { transition-delay: .08s; }
+    .slide.active .reveal:nth-child(3) { transition-delay: .16s; }
+    .slide.active .reveal:nth-child(4) { transition-delay: .24s; }
+    .slide.active .reveal:nth-child(5) { transition-delay: .32s; }
+    .slide.active .reveal:nth-child(6) { transition-delay: .40s; }
+
+    @media (max-width: 980px) {
+      :root {
+        --slide-w: min(94vw, 900px);
+        --slide-h: min(86vh, 760px);
+      }
+
+      .grid-hero,
+      .grid-2,
+      .persona-layout,
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .stats,
+      .skills-grid,
+      .timeline,
+      .project-grid,
+      .list-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .avatar-wrap {
+        min-height: 260px;
+      }
+
+      .project img {
+        height: 160px;
+      }
+
+      .content {
+        overflow: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck">
+
+    <!-- SLIDE 1 -->
+    <section class="slide active" data-slide="1">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> BOTJURIDICO</div>
+            <div>Entrega 1 | Innovación Legal</div>
+          </div>
+
+          <div class="grid-hero">
+            <div class="panel hero-card strong">
+              <div>
+                <div class="eyebrow reveal">Innovación de Proceso Legal</div>
+                <h1 class="title reveal">BOT<br>JURÍDICO</h1>
+                <p class="lead reveal">
+                  Asistente legal inteligente diseñado para agilizar la gestión jurídica. Transformamos tareas legales repetitivas en procesos más rápidos, organizados y accionables mediante automatización y IA.
+                </p>
+                <div class="chips reveal">
+                  <div class="chip">Legaltech</div>
+                  <div class="chip">IA Aplicada</div>
+                  <div class="chip">Automatización Integral</div>
+                  <div class="chip">Trazabilidad</div>
+                </div>
+              </div>
+
+              <div class="stats reveal">
+                <div class="stat">
+                  <div class="n">90%</div>
+                  <div class="t">Manualidad Reducida</div>
+                </div>
+                <div class="stat">
+                  <div class="n">Risk</div>
+                  <div class="t">Mitigación Regulatoria</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="avatar-wrap reveal">
+              <div class="avatar-ring">
+                <img
+                  src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=900&q=80"
+                  alt="Justicia y Tecnología"
+                  width="900"
+                  height="900"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: BUYER PERSONA -->
+    <section class="slide" data-slide="2">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> Perfil Líder</div>
+            <div>Buyer Persona</div>
+          </div>
+
+          <div class="persona-layout">
+            <div class="avatar-wrap reveal" style="min-height: auto; height: 100%;">
+               <img 
+                src="https://media.licdn.com/dms/image/v2/D4E03AQH_9JvxSlfKSQ/profile-displayphoto-crop_800_800/B4EZphvkpaIIAI-/0/1762576452779?e=1781136000&v=beta&t=S4vXTVex2jXOoxCO5Yx_m8ByWdTHeZ1-1yZaPwVIYzU" 
+                alt="Andrés Guio Arias" 
+                style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;"
+               />
+            </div>
+            
+            <div class="persona-card reveal custom-scroll" style="overflow-y: auto;">
+              <div class="eyebrow">Data Engineer | Zipaquirá</div>
+              <h2 class="title-md" style="margin-bottom: 2px;">Andrés Guio Arias</h2>
+              <p style="color: var(--accent); font-weight: 600; font-size: 13px; margin-bottom: 10px;">27 años | Sector Financiero</p>
+              
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="panel" style="padding: 12px; background: var(--panel-strong);">
+                  <p style="font-size: 12px; line-height: 1.5; color: var(--text);">
+                    <strong>Perfil:</strong> Profesional de datos enfocado en eficiencia operativa y mejora continua. Experto en automatización y migración cloud (AWS).
+                  </p>
+                </div>
+                
+                <div class="list-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                  <div class="list-box" style="padding: 10px;">
+                    <h4>Rasgos</h4>
+                    <ul style="font-size: 11px;">
+                      <li>Pensamiento lógico.</li>
+                      <li>Curiosidad tecnológica.</li>
+                      <li>Enfoque práctico.</li>
+                    </ul>
+                  </div>
+                  <div class="list-box" style="padding: 10px;">
+                    <h4>Objetivos</h4>
+                    <ul style="font-size: 11px;">
+                      <li>Data Architect (AWS).</li>
+                      <li>Proyectos de impacto.</li>
+                      <li>Senior con IA.</li>
+                    </ul>
+                  </div>
+                  <div class="list-box" style="padding: 10px;">
+                    <h4>Frustraciones</h4>
+                    <ul style="font-size: 11px;">
+                      <li>Procesos manuales.</li>
+                      <li>Datos desorganizados.</li>
+                      <li>Flujos ineficientes.</li>
+                    </ul>
+                  </div>
+                  <div class="list-box" style="padding: 10px;">
+                    <h4>Motivaciones</h4>
+                    <ul style="font-size: 11px;">
+                      <li>Optimizar procesos.</li>
+                      <li>Aprender nuevas tech.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3 -->
+    <section class="slide" data-slide="3">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> A. Grupo Creativo</div>
+            <div>02</div>
+          </div>
+
+          <div class="eyebrow reveal">1. Perfiles del grupo creativo</div>
+
+          <div class="list-grid custom-scroll" style="grid-template-columns: repeat(2, 1fr); margin-top: 10px; flex: 1; overflow-y: auto; padding-right: 5px;">
+            <div class="perfil-card reveal">
+              <h4>Integrante 1: Líder de innovación</h4>
+              <p>Encargado de alinear el problema con los objetivos del área jurídica, organizar sesiones de trabajo y priorizar alternativas. Debe tener visión estratégica y capacidad de síntesis.</p>
+              <div class="tags-small">
+                <span class="tag-s">Liderazgo</span> <span class="tag-s">Pensamiento Crítico</span> <span class="tag-s">Gestión Proyectos</span>
+              </div>
+            </div>
+            <div class="perfil-card reveal">
+              <h4>Integrante 2: Abogado del proceso</h4>
+              <p>Conoce el flujo jurídico actual, revisión de adjuntos y tiempos regulatorios. Traduce la necesidad del negocio y asegura que la solución responda al problema real.</p>
+              <div class="tags-small">
+                <span class="tag-s">Rigor</span> <span class="tag-s">Criterio Normativo</span> <span class="tag-s">Análisis Documental</span>
+              </div>
+            </div>
+            <div class="perfil-card reveal">
+              <h4>Integrante 3: Analista de automatización</h4>
+              <p>Responsable de diseñar la automatización del flujo: scraping, extracción de metadatos e integración. Aporta la visión técnica para una solución ejecutable y escalable.</p>
+              <div class="tags-small">
+                <span class="tag-s">Proactividad</span> <span class="tag-s">ETL/ELT</span> <span class="tag-s">Integración Sistemas</span>
+              </div>
+            </div>
+            <div class="perfil-card reveal">
+              <h4>Integrante 4: Especialista en IA</h4>
+              <p>Enfocado en extracción de información de adjuntos y resumen automático del requerimiento. Convierte documentos no estructurados en información útil.</p>
+              <div class="tags-small">
+                <span class="tag-s">IA Generativa</span> <span class="tag-s">Prompts</span> <span class="tag-s">Pensamiento Analítico</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4 -->
+    <section class="slide" data-slide="4">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> Estrategias</div>
+            <div>03</div>
+          </div>
+
+          <div class="list-grid" style="flex: 1;">
+            <div class="list-box reveal">
+              <h4>2. Equipo Experto</h4>
+              <p style="font-size: 12px; margin-bottom: 8px;">Trabajaremos como unidad interdisciplinaria con validación continua:</p>
+              <ul>
+                <li>Alineación inicial de problema y alcance.</li>
+                <li>Mapeo del proceso actual e identificación de puntos de falla.</li>
+                <li>Sesión de ideas con técnica creativa estructurada.</li>
+                <li>Evaluación de alternativas por impacto, costo, tiempo y riesgo.</li>
+                <li>Prototipo rápido y validación continua con área jurídica.</li>
+              </ul>
+            </div>
+            <div class="list-box reveal">
+              <h4>3. Creatividad Organizacional</h4>
+              <p style="font-size: 12px; margin-bottom: 8px;">Institucionalizar espacios de ideación sobre problemas reales:</p>
+              <ul>
+                <li>Sesiones mensuales de innovación por área.</li>
+                <li>Usar técnicas como brainwriting, 5 Whys y espina de pescado.</li>
+                <li>Premiar ideas implementables que reduzcan costos.</li>
+                <li>Documentar aprendizajes de cada proyecto para reutilizarlos.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5 -->
+    <section class="slide" data-slide="5">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> Problema</div>
+            <div>04</div>
+          </div>
+
+          <div class="eyebrow reveal">B. Definición del Problema</div>
+          <h2 class="title-md reveal">Riesgo de omisión y respuesta tardía</h2>
+
+          <div class="list-grid custom-scroll" style="margin-top: 15px; flex: 1; overflow-y: auto; padding-bottom: 10px;">
+             <div class="panel reveal">
+                <h4 style="color:var(--accent); font-size:12px; text-transform:uppercase; margin-bottom:10px;">1. ¿Cuál es el problema?</h4>
+                <p style="font-size:13px; line-height:1.5;">El área jurídica presenta riesgo de omisión de procesos y respuestas regulatorias tardías porque la recepción, descarga y clasificación depende de tareas manuales y repetitivas.</p>
+             </div>
+             <div class="panel reveal">
+                <h4 style="color:var(--accent); font-size:12px; text-transform:uppercase; margin-bottom:10px;">2. ¿Por qué existe?</h4>
+                <p style="font-size:13px; line-height:1.5;">El flujo está fragmentado: autenticación, descarga y extracción de datos dependen de revisión humana constante, aumentando el error y retraso.</p>
+             </div>
+             <div class="panel reveal" style="grid-column: span 2;">
+                <h4 style="color:var(--accent); font-size:12px; text-transform:uppercase; margin-bottom:10px;">3. ¿Por qué ocurre?</h4>
+                <p style="font-size:13px; line-height:1.5;">Ocurre por falta de automatización integral, alto volumen de procesos, manejo documental no estructurado y ausencia de un mecanismo centralizado que capture y clasifique información a tiempo.</p>
+             </div>
+          </div>
+
+          <div class="panel strong reveal" style="margin-top:15px; padding: 15px;">
+            <h4 style="font-size: 11px; margin-bottom: 5px; color: var(--accent);">8. Definición Final (Máximo 30 palabras)</h4>
+            <p style="font-size: 16px; text-align: center; color: var(--text); font-weight: 600;">"El área jurídica enfrenta riesgo de omitir procesos y responder tarde requerimientos por la gestión manual, fragmentada y no integrada de recepción, análisis, asignación y registro documental."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6 -->
+    <section class="slide" data-slide="6">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> B. Diagnóstico</div>
+            <div>05</div>
+          </div>
+
+          <div class="persona-layout">
+            <div class="panel reveal custom-scroll" style="overflow-y: auto; padding-right: 10px;">
+              <h4 style="font-size: 13px; color: var(--accent); margin-bottom: 12px; text-transform: uppercase;">4. Tabla de Fuerzas</h4>
+              <table class="force-table">
+                <thead>
+                  <tr><th>Fuerzas Limitantes</th><th>Fuerzas Conductoras</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Dependencia de revisión manual de procesos.</td><td>Necesidad de cumplir tiempos regulatorios y evitar omisiones.</td></tr>
+                  <tr><td>Alto volumen de documentos y adjuntos por caso.</td><td>Interés del área jurídica en reducir carga operativa.</td></tr>
+                  <tr><td>Información dispersa entre plataforma y correos.</td><td>Disponibilidad de automatización e IA aplicada.</td></tr>
+                  <tr><td>Riesgo de error en clasificación y asignación.</td><td>Posibilidad de trazabilidad y seguimiento centralizado.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="persona-right">
+              <div class="list-box reveal">
+                <h4>7. Alcance del Problema</h4>
+                <p style="font-size: 11px; color: var(--muted); line-height: 1.5;">Afecta a abogados, coordinadores y a la empresa por riesgo de incumplimiento. Ocurre de manera recurrente ya que la consulta es periódica. Impacto: pérdida de tiempo, respuestas tardías y sobrecarga operativa.</p>
+              </div>
+              <div class="list-box reveal">
+                <h4>5. Causas y Consecuencias</h4>
+                <p style="font-size: 11px; color: var(--muted); line-height: 1.5;">Combinación de monitoreo manual, ausencia de automatización y sobrecarga documental. <strong>Consecuencias:</strong> omisión de procesos, riesgo regulatorio y menor tiempo para análisis jurídico de valor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7 -->
+    <section class="slide" data-slide="7">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> B. Esquemas</div>
+            <div>06</div>
+          </div>
+
+          <div class="eyebrow reveal">5. Espina de Pescado (Ishikawa)</div>
+          
+          <div class="fishbone-container reveal">
+            <svg viewBox="0 0 800 280" style="width: 100%; height: 100%; font-family: 'Inter', sans-serif;">
+              <!-- Spine -->
+              <line x1="40" y1="140" x2="650" y2="140" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" />
+              
+              <!-- Head (Effect) -->
+              <path d="M 650 90 L 780 140 L 650 190 Z" fill="rgba(255,255,255,0.11)" stroke="#6ee7d8" stroke-width="2" />
+              <text x="705" y="135" fill="#eef2ff" font-size="11" font-weight="800" text-anchor="middle">RIESGO DE OMISIÓN</text>
+              <text x="705" y="152" fill="#eef2ff" font-size="11" font-weight="800" text-anchor="middle">Y RESPUESTA TARDÍA</text>
+
+              <!-- Ribs Upper -->
+              <!-- Personas -->
+              <line x1="120" y1="140" x2="200" y2="50" stroke="#8b5cf6" stroke-width="2" />
+              <text x="180" y="35" fill="#6ee7d8" font-size="12" font-weight="700">Personas</text>
+              <text x="180" y="48" fill="#a5b0c8" font-size="10">Carga manual, dependencia humana</text>
+
+              <!-- Procesos -->
+              <line x1="300" y1="140" x2="380" y2="50" stroke="#8b5cf6" stroke-width="2" />
+              <text x="360" y="35" fill="#6ee7d8" font-size="12" font-weight="700">Procesos</text>
+              <text x="360" y="48" fill="#a5b0c8" font-size="10">Clasificación manual, recepción lenta</text>
+
+              <!-- Tecnología -->
+              <line x1="480" y1="140" x2="560" y2="50" stroke="#8b5cf6" stroke-width="2" />
+              <text x="540" y="35" fill="#6ee7d8" font-size="12" font-weight="700">Tecnología</text>
+              <text x="540" y="48" fill="#a5b0c8" font-size="10">Falta de integración con IA</text>
+
+              <!-- Ribs Lower -->
+              <!-- Información -->
+              <line x1="220" y1="140" x2="140" y2="230" stroke="#8b5cf6" stroke-width="2" />
+              <text x="130" y="245" fill="#6ee7d8" font-size="12" font-weight="700" text-anchor="middle">Información</text>
+              <text x="130" y="258" fill="#a5b0c8" font-size="10" text-anchor="middle">Folios dispersos, adjuntos densos</text>
+
+              <!-- Control -->
+              <line x1="420" y1="140" x2="340" y2="230" stroke="#8b5cf6" stroke-width="2" />
+              <text x="330" y="245" fill="#6ee7d8" font-size="12" font-weight="700" text-anchor="middle">Control</text>
+              <text x="330" y="258" fill="#a5b0c8" font-size="10" text-anchor="middle">Trazabilidad limitada, alertas nulas</text>
+            </svg>
+          </div>
+
+          <div class="panel reveal" style="margin-top: 15px; padding: 15px;">
+            <h4 style="font-size: 11px; color: var(--accent); text-transform: uppercase; margin-bottom: 8px;">6. Método 5W (Contexto del problema)</h4>
+            <div class="list-grid" style="grid-template-columns: repeat(3, 1fr); font-size: 9px; line-height: 1.3;">
+              <div><strong>What:</strong> Riesgo de omisión por manejo manual del flujo documental.</div>
+              <div><strong>Why:</strong> La revisión y clasificación depende de intervención humana.</div>
+              <div><strong>Who:</strong> Equipo jurídico, abogados y organización frente a cumplimiento.</div>
+              <div><strong>When:</strong> Visible ante alto volumen; significativo ante vencimientos.</div>
+              <div><strong>Where:</strong> Operación jurídica, recepción y asignación de procesos.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8 -->
+    <section class="slide" data-slide="8">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> C. Alternativas</div>
+            <div>07</div>
+          </div>
+
+          <div class="eyebrow reveal">1. Técnica: Brainwriting 6-3-5</div>
+          <p style="font-size: 11px; margin-bottom: 15px;">Metodología estructurada de ideación donde los participantes escriben ideas y construyen sobre las de otros, favoreciendo una participación equilibrada y gran volumen de alternativas.</p>
+
+          <div class="list-grid custom-scroll" style="grid-template-columns: repeat(2, 1fr); gap: 10px; flex: 1; overflow-y: auto; padding-right: 5px;">
+            <div class="mini"><span>Alt 1: Proceso Manual</span><p style="font-size: 10px;">Checklist y matriz de seguimiento. <strong>V:</strong> bajo costo. <strong>D:</strong> depende del factor humano.</p></div>
+            <div class="mini"><span>Alt 2: Buzón Central</span><p style="font-size: 10px;">Reparto manual estandarizado. <strong>V:</strong> mejora el orden. <strong>D:</strong> no resuelve el cuello de botella.</p></div>
+            <div class="mini"><span>Alt 3: Robot de Descarga</span><p style="font-size: 10px;">Script de autenticación y descarga. <strong>V:</strong> reduce monitoreo. <strong>D:</strong> clasificación sigue manual.</p></div>
+            <div class="mini"><span>Alt 4: Automatización IA</span><p style="font-size: 10px;">Flujo integral: descarga, resumen y registro con IA. <strong>V:</strong> elimina manualidad. <strong>D:</strong> diseño inicial.</p></div>
+            <div class="mini"><span>Alt 5: Software Externo</span><p style="font-size: 10px;">Plataforma de terceros. <strong>V:</strong> menor desarrollo. <strong>D:</strong> alto costo y dependencia.</p></div>
+            <div class="mini"><span>Alt 6: Modelo Híbrido</span><p style="font-size: 10px;">Implementación gradual por fases. <strong>V:</strong> menor riesgo. <strong>D:</strong> beneficio lento.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9 -->
+    <section class="slide" data-slide="9">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> C. Selección</div>
+            <div>08</div>
+          </div>
+
+          <div class="eyebrow reveal">3. Evaluación y Selección de la Alternativa</div>
+          
+          <div class="grid-2" style="flex: 1;">
+            <div class="panel reveal">
+              <h4 style="font-size: 14px; color: var(--accent); margin-bottom: 10px;">Alternativa Más Factible: Alt 4</h4>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--muted);"><strong>Automatización integral del flujo jurídico con IA.</strong> Resuelve la necesidad central: disminuir omisiones, tiempos de respuesta y carga manual en un proceso crítico.</p>
+              <ul style="font-size: 11px; margin-top: 10px; color: var(--muted);">
+                <li>Ataca varias causas raíz a la vez (Monitoreo, Descarga, Lectura, Clasificación).</li>
+                <li>Reduce dependencia de tareas repetitivas hechas por personas.</li>
+                <li>Aporta escalabilidad frente a mayor volumen documental.</li>
+              </ul>
+            </div>
+            <div class="panel strong reveal" style="display: flex; flex-direction: column; justify-content: center;">
+              <h4 style="font-size: 12px; color: var(--accent); margin-bottom: 8px;">Justificación Técnica</h4>
+              <p style="font-size: 11px; line-height: 1.6;">Se eligió esta alternativa porque combina viabilidad técnica e impacto operacional. Frente a otras opciones, no solo ordena el flujo sino que elimina puntos críticos de omisión mediante una base de datos centralizada e integración con IA.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10 -->
+    <section class="slide" data-slide="10">
+      <div class="frame">
+        <div class="content">
+          <div class="topbar reveal">
+            <div class="brand"><span class="brand-dot"></span> D. Solución</div>
+            <div>09</div>
+          </div>
+
+          <div class="eyebrow reveal">D. Ventajas de la Solución e Innovación</div>
+          
+          <div class="panel strong reveal" style="margin-bottom: 15px;">
+            <p style="font-size: 13px; line-height: 1.6;">La solución seleccionada corresponde a una <strong>innovación de proceso</strong>, porque transforma la manera en que el área jurídica recibe, analiza y registra los procesos. Rediseña el flujo operativo para hacerlo más seguro, ágil y trazable.</p>
+          </div>
+
+          <div class="list-grid custom-scroll" style="flex: 1; overflow-y: auto; padding-right: 5px;">
+             <div class="list-box reveal">
+               <h4>Impacto Operativo</h4>
+               <ul>
+                 <li>Disminuye el riesgo de omitir procesos jurídicos.</li>
+                 <li>Reduce tiempos de descarga, revisión y asignación.</li>
+                 <li>Mejora el cumplimiento de respuestas regulatorias.</li>
+               </ul>
+             </div>
+             <div class="list-box reveal">
+               <h4>Valor Agregado</h4>
+               <ul>
+                 <li>Centraliza datos, adjuntos y resúmenes IA.</li>
+                 <li>Facilita seguimiento, trazabilidad y auditoría.</li>
+                 <li>Abogados enfocados en análisis y decisión jurídica.</li>
+               </ul>
+             </div>
+          </div>
+
+          <div class="panel reveal" style="margin-top: 15px; text-align: center;">
+             <p style="font-size: 12px; color: var(--accent); font-weight: 700;">BOTJURIDICO: INTELIGENCIA APLICADA AL TRABAJO LEGAL</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn" aria-label="Anterior">&#8249;</button>
+    <div class="dots" id="dots"></div>
+    <button id="nextBtn" aria-label="Siguiente">&#8250;</button>
+    <div class="counter" id="counter">1 / 10</div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsWrap = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    let current = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updateUI() {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === current);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === current);
+      });
+
+      counter.textContent = `${current + 1} / ${slides.length}`;
+    }
+
+    function goTo(index) {
+      current = (index + slides.length) % slides.length;
+      updateUI();
+    }
+
+    function next() {
+      goTo(current + 1);
+    }
+
+    function prev() {
+      goTo(current - 1);
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', next);
+    document.getElementById('prevBtn').addEventListener('click', prev);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        next();
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prev();
+      }
+    });
+
+    let touchStartX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? next() : prev();
+      }
+    }, { passive: true });
+
+    updateUI();
+  </script>
+</body>
+</html>
